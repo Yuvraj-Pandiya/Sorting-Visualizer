@@ -75,3 +75,129 @@ table {
     background: linear-gradient(green,yellow,cyan);
     border-radius: 10px;
 }
+
+/* =========================================================
+   SORTING VISUALIZATION STYLES (ADDED FEATURES)
+   These styles create animated bars for sorting visualization
+   ========================================================= */
+
+/* Container where sorting bars will appear */
+#visualization {
+    margin-top: 50px;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    height: 350px;
+    display: flex;
+    align-items: flex-end; /* bars grow upward */
+    justify-content: center;
+    gap: 8px;
+}
+
+/* Individual bars representing numbers */
+.bar {
+    width: 35px;
+    background: linear-gradient(cyan, blue);
+    border-radius: 5px 5px 0 0;
+    text-align: center;
+    color: white;
+    font-size: 12px;
+    transition: height 0.4s ease, background 0.3s;
+}
+
+/* Number shown above each bar */
+.bar span {
+    position: relative;
+    top: -20px;
+    font-weight: bold;
+}
+
+/* Highlight bars when comparing elements */
+.bar.active {
+    background: linear-gradient(red, orange);
+}
+
+/* Highlight bars when swap happens */
+.bar.swap {
+    background: linear-gradient(yellow, orange);
+}
+
+/* Final sorted bar color */
+.bar.sorted {
+    background: linear-gradient(limegreen, green);
+}
+
+/* =========================================================
+   SORTING RESULT PANEL
+   ========================================================= */
+
+#resultPanel {
+    margin-top: 40px;
+    text-align: center;
+    color: white;
+}
+
+/* Sorting step display */
+.step-box {
+    margin-top: 20px;
+    background: rgba(0,0,0,0.6);
+    padding: 15px;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+/* =========================================================
+   TIME COMPLEXITY BOX
+   ========================================================= */
+
+#complexityBox {
+    margin-top: 25px;
+    background: rgba(0,0,0,0.7);
+    padding: 15px;
+    border-radius: 10px;
+    display: inline-block;
+    font-size: 18px;
+    box-shadow: 5px 5px 10px black;
+}
+
+/* =========================================================
+   INPUT BOX FOR NUMBERS
+   ========================================================= */
+
+.input-box {
+    width: 300px;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+}
+
+/* =========================================================
+   DROPDOWN STYLE FOR ALGORITHM SELECTION
+   ========================================================= */
+
+.select-box {
+    padding: 8px;
+    border-radius: 10px;
+    border: none;
+}
+
+/* =========================================================
+   SORT BUTTON ANIMATION
+   ========================================================= */
+
+.sort-btn {
+    margin-top: 10px;
+    padding: 10px 25px;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    background: linear-gradient(cyan, yellow, green);
+}
+
+.sort-btn:hover {
+    background: linear-gradient(green, yellow, cyan);
+    transform: scale(1.05);
+    transition: 0.3s;
+}
