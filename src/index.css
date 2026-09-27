@@ -9,7 +9,7 @@
     background-color: theme('colors.background');
   }
   body {
-    @apply font-body text-body-md text-on-surface antialiased;
+    @apply font-body text-sm text-on-surface antialiased;
     overscroll-behavior: none;
   }
 }

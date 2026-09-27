@@ -57,7 +57,7 @@ function App() {
   const { array, activeIndices, comparisons, swaps, elapsedTime, isRunning, isSorted, play, reset } = player;
 
   return (
-    <div className="bg-background font-body text-body-md text-on-surface antialiased min-h-screen">
+    <div className="bg-background font-body text-sm text-on-surface antialiased min-h-screen">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-surface border-b-2 border-outline">
         <div className="w-full px-space-lg h-full flex items-center justify-between">
