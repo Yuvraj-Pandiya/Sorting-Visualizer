@@ -1,33 +1,49 @@
 import React from 'react';
 
 export default function Visualizer({ array }) {
-  // We'll calculate the bar width based on container, but flex makes it easy.
   return (
-    <div className="flex-1 bg-[#1e293b]/50 rounded-xl border border-white/5 backdrop-blur-md flex flex-col relative overflow-hidden p-6 mb-4">
-      {/* Legend */}
-      <div className="absolute top-4 right-4 flex gap-4 text-[10px] font-jetbrains uppercase tracking-wider">
-        <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-gradient-to-t from-[#6366f1] to-[#38bdf8]"></div> Default</div>
-        <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-[#f59e0b] shadow-[0_0_5px_rgba(245,158,11,0.5)]"></div> Comparing</div>
-        <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-[#ef4444] shadow-[0_0_5px_rgba(239,68,68,0.5)]"></div> Swapping</div>
-        <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-[#8b5cf6] shadow-[0_0_5px_rgba(139,92,246,0.5)]"></div> Pivot/Key</div>
-        <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-[#10b981] shadow-[0_0_5px_rgba(16,185,129,0.5)]"></div> Sorted</div>
+    <div className="bg-surface-container-lowest border-2 border-outline shadow-brutal flex flex-col overflow-hidden relative">
+      {/* Viewport Header Strip */}
+      <div className="bg-surface-container-high px-space-md py-3 flex flex-wrap items-center justify-between gap-space-sm border-b-2 border-outline">
+        <div className="flex items-center gap-space-sm">
+          <span className="w-3 h-3 bg-secondary border border-outline"></span>
+          <div className="flex flex-col">
+            <span className="font-headline font-bold text-base uppercase tracking-tight text-on-surface">Visualizer Window</span>
+            <span className="font-code-notation text-xs font-medium text-on-surface-variant">Viewport Canvas #01 // Pure Geometry</span>
+          </div>
+        </div>
+        <div className="flex items-center gap-space-md">
+          <div className="flex items-center gap-1.5 px-space-sm py-1 bg-primary-container border-2 border-outline text-on-surface font-code-notation text-xs font-bold shadow-brutal-sm">
+            <span className="material-symbols-outlined text-[15px] font-bold">insights</span>
+            <span>STATUS: IDLE</span>
+          </div>
+        </div>
       </div>
-
-      <div className="flex-1 flex items-end justify-center gap-[1px] mt-8">
-        {array && array.map((val, idx) => {
-          // For now, render default styling
-          return (
-            <div
-              key={idx}
-              style={{
-                height: `${val}%`,
-                flex: 1,
-                background: 'linear-gradient(to top, #6366f1, #38bdf8)'
-              }}
-              className="rounded-t-[2px] opacity-90 transition-all duration-75"
-            ></div>
-          );
-        })}
+      
+      {/* Color Legend Bar */}
+      <div className="bg-surface-container px-space-md py-2 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-on-surface font-label text-xs font-bold uppercase tracking-wider border-b-2 border-outline">
+        <div className="flex items-center gap-1.5"><span className="w-3 h-3 bg-[#0055ff] border border-outline shadow-brutal-sm"></span><span>Default</span></div>
+        <div className="flex items-center gap-1.5"><span className="w-3 h-3 bg-[#ffcc00] border border-outline shadow-brutal-sm"></span><span>Comparing [i, j]</span></div>
+        <div className="flex items-center gap-1.5"><span className="w-3 h-3 bg-[#e63b2e] border border-outline shadow-brutal-sm"></span><span>Swapping</span></div>
+        <div className="flex items-center gap-1.5"><span className="w-3 h-3 bg-[#1a1a1a] border border-outline shadow-brutal-sm"></span><span>Pivot / Key</span></div>
+        <div className="flex items-center gap-1.5"><span className="w-3 h-3 bg-[#10b981] border border-outline shadow-brutal-sm"></span><span>Sorted</span></div>
+      </div>
+      
+      {/* Dynamic Stage Canvas Area */}
+      <div className="relative w-full h-[380px] sm:h-[440px] xl:h-[480px] bg-[#faf8f5] px-2 sm:px-space-md pb-4 pt-10 flex items-end justify-center select-none overflow-hidden">
+        {/* Dynamic Bar Container */}
+        <div className="w-full h-full flex items-end justify-center gap-[2px] z-0">
+          {array && array.map((val, idx) => {
+            const heightPercent = Math.max(6, Math.min(100, (val / 100) * 100));
+            return (
+              <div
+                key={idx}
+                className="flex-1 transition-all duration-75 relative group border-t-2 border-x border-outline bg-[#0055ff]"
+                style={{ height: `${heightPercent}%` }}
+              ></div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

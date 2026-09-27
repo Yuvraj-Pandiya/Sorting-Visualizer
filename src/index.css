@@ -3,7 +3,16 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-background text-on-background font-inter antialiased;
+  html, body {
+    margin: 0;
+    padding: 0;
+    background-color: theme('colors.background');
   }
+  body {
+    @apply font-body text-body-md text-on-surface antialiased;
+    overscroll-behavior: none;
+  }
+}
+::-webkit-scrollbar {
+  display: none;
 }
