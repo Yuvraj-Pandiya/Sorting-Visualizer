@@ -1,15 +1,60 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Sidebar from './components/Sidebar';
 import Visualizer from './components/Visualizer';
 import Telemetry from './components/Telemetry';
 import InfoPanel from './components/InfoPanel';
+import { useSortPlayer } from './hooks/useSortPlayer';
+import { algorithms } from './algorithms';
+
+function generateArrayData(size, preset) {
+  const arr = [];
+  if (preset === 'random') {
+    for (let i = 0; i < size; i++) arr.push(Math.floor(Math.random() * 88) + 12);
+  } else if (preset === 'nearlySorted') {
+    for (let i = 0; i < size; i++) arr.push(Math.floor((i / size) * 88) + 12);
+    const swaps = Math.max(2, Math.floor(size * 0.1));
+    for (let s = 0; s < swaps; s++) {
+      const idxA = Math.floor(Math.random() * size);
+      const idxB = Math.floor(Math.random() * size);
+      const tmp = arr[idxA];
+      arr[idxA] = arr[idxB];
+      arr[idxB] = tmp;
+    }
+  } else if (preset === 'reversed') {
+    for (let i = 0; i < size; i++) arr.push(Math.floor(((size - i) / size) * 88) + 12);
+  } else if (preset === 'fewUnique') {
+    const distinct = [20, 42, 65, 88, 98];
+    for (let i = 0; i < size; i++) arr.push(distinct[i % distinct.length]);
+    for (let i = size - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const temp = arr[i];
+      arr[i] = arr[j];
+      arr[j] = temp;
+    }
+  }
+  return arr;
+}
 
 function App() {
-  const [array, setArray] = useState([]);
-  
+  const [size, setSize] = useState(64);
+  const [speedStr, setSpeedStr] = useState("25");
+  const [preset, setPreset] = useState('random');
+  const [algoKey, setAlgoKey] = useState('quick');
+  const [initialArray, setInitialArray] = useState(() => generateArrayData(64, 'random'));
+
+  const handleGenerate = useCallback(() => {
+    const newArr = generateArrayData(size, preset);
+    setInitialArray(newArr);
+    reset(newArr);
+  }, [size, preset]);
+
+  // Handle manual size changes
   useEffect(() => {
-    setArray(Array.from({ length: 64 }, () => Math.floor(Math.random() * 88) + 12));
-  }, []);
+    handleGenerate();
+  }, [size, preset, handleGenerate]);
+
+  const player = useSortPlayer(initialArray, algorithms[algoKey], speedStr);
+  const { array, activeIndices, comparisons, swaps, elapsedTime, isRunning, isSorted, play, reset } = player;
 
   return (
     <div className="bg-background font-body text-body-md text-on-surface antialiased min-h-screen">
@@ -23,7 +68,9 @@ function App() {
             </div>
             <div className="hidden sm:flex items-center gap-space-xs pl-space-sm border-l-2 border-outline ml-2">
               <span className="inline-flex h-2.5 w-2.5 rounded-full bg-secondary border border-outline animate-pulse"></span>
-              <span className="font-label text-xs font-bold text-on-surface uppercase tracking-wider">System: Ready</span>
+              <span className="font-label text-xs font-bold text-on-surface uppercase tracking-wider">
+                System: {isRunning ? 'Running' : (isSorted ? 'Done' : 'Ready')}
+              </span>
             </div>
           </div>
         </div>
@@ -31,16 +78,23 @@ function App() {
 
       {/* Main Layout */}
       <div className="pt-16 flex w-full">
-        <Sidebar />
+        <Sidebar 
+          size={size} setSize={setSize}
+          speed={speedStr} setSpeed={setSpeedStr}
+          preset={preset} setPreset={setPreset}
+          algoKey={algoKey} setAlgoKey={setAlgoKey}
+          onGenerate={handleGenerate}
+          onStart={play}
+          onStop={() => reset(initialArray)}
+          isRunning={isRunning}
+        />
         <main className="flex-1 w-full xl:pl-80 bg-background min-h-[calc(100vh-4rem)]">
           <div className="w-full p-space-md lg:p-space-lg flex flex-col gap-space-lg">
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-space-lg items-start">
-              {/* Controls will go here or in sidebar for mobile? The HTML put controls in sidebar for Desktop. Let's assume Sidebar component handles the left panel. */}
-              {/* Main Stage */}
               <div className="xl:col-span-12 2xl:col-span-12 flex flex-col gap-space-md">
-                <Visualizer array={array} />
-                <Telemetry />
-                <InfoPanel />
+                <Visualizer array={array} activeIndices={activeIndices} algoKey={algoKey} isRunning={isRunning} isSorted={isSorted} />
+                <Telemetry comparisons={comparisons} swaps={swaps} elapsedTime={elapsedTime} algoKey={algoKey} />
+                <InfoPanel algoKey={algoKey} />
               </div>
             </div>
           </div>
